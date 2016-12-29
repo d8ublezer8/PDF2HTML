@@ -31,24 +31,15 @@ public class PdfListController {
 		String path = session.getServletContext().getRealPath("pdflist");
 		// System.out.println(path);
 
-		ArrayList<PdfFileVo> pd = new ArrayList<>();
-		for (int i = 0; i < 10; i++) {
-			PdfFileVo pdf = new PdfFileVo();
-			pdf.setTitle(i + "" + i);
-			pdf.setDate(i + "" + i);
-			pd.add(pdf);
-		}
-
-		PdfListDaoImp dao = new PdfListDaoImp();
-		dao.setPdfList(path, pd);
-
-		ArrayList<PdfFileVo> pdfF = dao.getPdfList(path);
-
-		// for(PdfFileVo ppp:pdfF){
-		// System.out.println(ppp.toString());
-		// }
-		String path2 = session.getServletContext().getRealPath("pdf");
-	
 		return "home";
+	}
+	@RequestMapping(value = "/viewer", method = RequestMethod.GET)
+	public String viewer(HttpSession session, Model model) {
+		logger.info(System.currentTimeMillis() + "");
+
+		String path = session.getServletContext().getRealPath("pdflist");
+		// System.out.println(path);
+
+		return "viewer";
 	}
 }
