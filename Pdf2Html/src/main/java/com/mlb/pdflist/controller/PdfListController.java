@@ -33,4 +33,13 @@ public class PdfListController {
 
 		return "home";
 	}
+	@RequestMapping(value = "/viewer", method = RequestMethod.GET)
+	public String viewer(HttpSession session, Model model) {
+		logger.info(System.currentTimeMillis() + "");
+
+		String path = session.getServletContext().getRealPath("pdflist");
+		// System.out.println(path);
+
+		return "viewer";
+	}
 }

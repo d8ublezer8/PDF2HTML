@@ -8,7 +8,7 @@
  
  <style type="text/css">
   #title1{
-   margin-top : 200px;
+   margin-top : 70px;
   }
 
   .h1{
