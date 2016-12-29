@@ -4,6 +4,8 @@
 <head>
 <title>Home</title>
 <script src="resources/jquery-3.1.1.min.js"></script>
+<script src="resources/bootstrap-3.3.2-dist/css/bootstrap.min.js"></script>
+
  <style type="text/css">
   #title1{
    margin-top : 200px;
