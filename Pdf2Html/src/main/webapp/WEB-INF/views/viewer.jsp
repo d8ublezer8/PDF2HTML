@@ -8,15 +8,17 @@
  
  <style type="text/css">
   #title1{
-   margin-top : 70px;
+   margin-top : 200px;
   }
 
   .h1{
   font-family:"¸¼Àº °íµñ";
-  font-size: 80px;
+  font-size: 80px;	
   font-weight:bold;
   }
-  
+  *{
+  margin:0px;
+  padding:0px;}
  </style>
 </head>
 <body>
@@ -24,6 +26,10 @@
   <form method="POST" id="frm" action="">
    <h1 id="title1" class = "h1">PDF 2 HTML</h1>
   </form>
+ </div>
+ <div style="text-align:center;">
+ <div style="display:inline; "><img src="image/Desert.jpg" width=70% border=0/> </div>
+ <div style="display:inline; "> <img src="image/Lighthouse.jpg" width=15% border=0/></div>
  </div>
  
 </body>
