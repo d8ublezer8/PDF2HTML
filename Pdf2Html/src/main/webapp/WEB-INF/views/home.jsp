@@ -60,5 +60,11 @@
    </div>
  </div>
  
+ <form action="/fileupload" method="post" enctype = "multipart/form-data" >
+ <input type = "file" name="file"multiple accept = ".pdf">
+ <input type="submit" value = "upload"></form>
+ 
+ 
+ 
 </body>
 </html>
