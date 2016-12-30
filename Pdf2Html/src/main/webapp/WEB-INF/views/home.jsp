@@ -138,7 +138,7 @@
  <input type="text" id="fileName" class="file_input_textbox" readonly="readonly">
 <div class="file_input_div">
 
-	<input type="button" value="Search files" class="file_input_button"/>
+	<input type="button" value="Search files" class="file_input_button" style="cursor: pointer"/>
 	<input type="file" class="file_input_hidden" onchange="javascript:document.getElementById('fileName').value = this.value"
 	name="file" multiple accept = ".pdf" />
 	</div>
