@@ -42,13 +42,13 @@ public class PdfListController {
 
 		return "viewer";
 	}
-	@RequestMapping(value = "/loading", method = RequestMethod.GET)
-	public String loading(HttpSession session, Model model) {
+	@RequestMapping(value = "/minimap", method = RequestMethod.GET)
+	public String minimap(HttpSession session, Model model) {
 		logger.info(System.currentTimeMillis() + "");
 
 		String path = session.getServletContext().getRealPath("pdflist");
 		// System.out.println(path);
 
-		return "loading";
+		return "minimap";
 	}
 }

@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Home</title>
-<script src="resources/jquery-3.1.1.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="resources/bootstrap-3.3.2-dist/css/bootstrap.min.js"></script>
 
  <style type="text/css">
@@ -58,7 +58,7 @@
  </div>
 <div class="butttonspace">
    <div class="span7" align= "center">                     
-  <input type="button" class="mainButton" value="Upload" onclick="">
+  <input type="button" class="mainButton" value="Upload" onclick="" style="cursor: pointer">
    </div>
  </div>
  
