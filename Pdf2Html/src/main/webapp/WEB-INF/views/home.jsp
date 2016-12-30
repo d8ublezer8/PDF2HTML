@@ -72,7 +72,7 @@
 	   else
 	   {
 	   alert(".PDF파일만 업로드 가능합니다");
-	   return;
+	   frm.submit();
 	   }
 	}
 
