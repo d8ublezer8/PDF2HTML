@@ -46,7 +46,6 @@ public class PdfListController {
 
 		return "viewer";
 	}
-
 	
 	@RequestMapping(value = "/fileupload",method = RequestMethod.POST)
 	public String fileUploadAjax(HttpSession session,MultipartRequest multipartRequest, HttpServletRequest request) throws IOException{
@@ -72,4 +71,15 @@ public class PdfListController {
 	return "home";
 	}
 	
+
+	@RequestMapping(value = "/loading", method = RequestMethod.GET)
+	public String loading(HttpSession session, Model model) {
+		logger.info(System.currentTimeMillis() + "");
+
+		String path = session.getServletContext().getRealPath("pdflist");
+		// System.out.println(path);
+
+		return "loading";
+	}
+
 }
