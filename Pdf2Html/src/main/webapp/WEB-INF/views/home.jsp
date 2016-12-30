@@ -72,10 +72,11 @@
   width:170px;
   height:25px;
   position: relative;
-
+  font-family:"맑은 고딕";
+  font-weight:bold;
   background-color: lightblue;
   color: #FFFFFF;
-  font-size:20px;
+  font-size:17px;
   border-style: none;	
   margin-left: 5px;
   }
