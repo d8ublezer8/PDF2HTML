@@ -40,6 +40,7 @@ public class PdfListController {
 
 		return "home";
 	}
+
 	@RequestMapping(value = "/viewer", method = RequestMethod.GET)
 	public String viewer(HttpSession session, Model model) {
 		logger.info(System.currentTimeMillis() + "");
@@ -49,6 +50,7 @@ public class PdfListController {
 
 		return "viewer";
 	}
+
 	
 	@RequestMapping(value = "/fileupload",method = RequestMethod.POST)
 	
@@ -81,26 +83,26 @@ public class PdfListController {
 	File f = new File(path);
 	File[] fList = f.listFiles();
 	FileUpload.fileUpload(file, path, fileName);
-	
-	
 
-	
-	
-	
 	return "home";
 	}
 	
-	
-	
-	@RequestMapping(value = "/loading", method = RequestMethod.GET)
-	public String loading(HttpSession session, Model model) {
+
+	@RequestMapping(value="/minimap",method=RequestMethod.GET)
+	public String minimap(HttpSession session, Model model) {
 		logger.info(System.currentTimeMillis() + "");
 
 		String path = session.getServletContext().getRealPath("pdflist");
 		// System.out.println(path);
 
+		return "minimap";
+	}
+
+	@RequestMapping(value = "/loading", method = RequestMethod.GET)
+	public String loading(HttpSession session, Model model) {
+		logger.info(System.currentTimeMillis() + "");
 		return "loading";
 	}
-	
+
 
 }

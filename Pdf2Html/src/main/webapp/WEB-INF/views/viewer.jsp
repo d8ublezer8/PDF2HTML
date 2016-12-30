@@ -4,11 +4,12 @@
 <html>
 <head>
 <title>Viewer</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
  <meta name="viewport" content="width=device-width, initial-scale=1.0">   
  
  <style type="text/css">
   #title1{
-   margin-top : 200px;
+   margin-top : 100px;
   }
 
   .h1{
@@ -28,8 +29,8 @@
   </form>
  </div>
  <div style="text-align:center;">
- <div style="display:inline; "><img src="image/Desert.jpg" width=70% border=0/> </div>
- <div style="display:inline; "> <img src="image/Lighthouse.jpg" width=15% border=0/></div>
+ <div style="display:inline; "><img src="resources/image/Desert.jpg" width=70% border=0/> </div>
+ <div style="display:inline; "> <img src="resources/image/Lighthouse.jpg" width=15% border=0/></div>
  </div>
  
 </body>
