@@ -96,7 +96,9 @@
   -moz-opacity:0;
   }
  </style>
- <script>
+ <script src = "http://malsup.github.com/jquery.form.js">
+ 
+ 
  function fileCheck(frm) {   
 
 	  var file = frm.file.value;
@@ -119,9 +121,11 @@
 	   frm.submit();
 	   }
 	}
-
-
+ 
 </script>
+
+
+
  
 </head>
 <body>
@@ -133,7 +137,7 @@
  </div>
  
  
-<form action="/fileupload" method="post" enctype = "multipart/form-data" >          
+<form id = "fileForm"  action="/fileupload" method="post" enctype = "multipart/form-data" >          
  <div class="butttonspace" >
  <input type="text" id="fileName" class="file_input_textbox" readonly="readonly">
 <div class="file_input_div">
@@ -144,7 +148,43 @@
 	</div>
    <div class="span7" align= "center"> 
 
-<input name="submitBtn" type="button"  class="mainButton" value="Upload"  style="cursor: pointer" onclick="fileCheck(this.form)">
+<input name="submitBtn" type="button"  class="mainButton" value="Upload"  style="cursor: pointer" onclick="fileSend(this.form)">
+<script>
+function fileSend(frm)
+{
+	
+	var file = frm.file.value;
+	var fileExt = file.substring(file.lastIndexOf('.')+1); //파일의 확장자를 구합니다.
+	 var bSubmitCheck = true;
+	
+	 if( !file ){ 
+		    alert( "파일을 선택하여 주세요!");
+		    return;
+		   }
+	 if(fileExt.toUpperCase() != "PDF")
+	   {
+	   alert("파일 업로드를 시작합니다.");
+	   $('#fileForm').ajaxForm({
+			 url: "/fileupload",
+			 enctype: "multipart/form-data", // 여기에 url과 enctype은 꼭 지정해주어야 하는 부분이며 multipart로 지정해주지 않으면 controller로 파일을 보낼 수 없음
+			 success: function(){
+			 alert("전송성공");
+			 }
+			 });
+			 // 여기까지는 ajax와 같다. 하지만 아래의 submit명령을 추가하지 않으면 백날 실행해봤자 액션이 실행되지 않는다.
+			 $('#fileForm').submit(); 
+ }
+ else
+ {
+ alert(".PDF파일만 업로드 가능합니다");
+ frm.submit();
+ }
+	
+	 
+}
+
+</script>
+
   </div>
  </div>
  </form>

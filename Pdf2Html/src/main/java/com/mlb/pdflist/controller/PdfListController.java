@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -53,10 +55,10 @@ public class PdfListController {
 
 	
 	@RequestMapping(value = "/fileupload",method = RequestMethod.POST)
-	
-	public String fileUploadAjax(HttpSession session,MultipartRequest multipartRequest, HttpServletRequest request) throws IOException{
+	@ResponseBody
+	public String fileUploadAjax(HttpSession session, @RequestParam(value="file") MultipartFile file,  MultipartRequest multipartRequest, HttpServletRequest request) throws IOException{
 
-	MultipartFile file = multipartRequest.getFile("file");  //뷰에서 form으로 넘어올 때 name에 적어준 이름입니다.​
+	//MultipartFile file = multipartRequest.getFile("file");  //뷰에서 form으로 넘어올 때 name에 적어준 이름입니다.​
 
 	String fileName = file.getOriginalFilename();
 	System.out.println(fileName);
