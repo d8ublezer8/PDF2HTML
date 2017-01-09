@@ -80,7 +80,7 @@
 		</form>
 	</div>
 	<div class="view_body">
-		<c:import url="${view}"></c:import>
+		<c:import url="/htmllist/${view}"></c:import>
 	</div>
 </body>
 </html>
