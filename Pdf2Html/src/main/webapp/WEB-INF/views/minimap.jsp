@@ -80,7 +80,10 @@
 		</form>
 	</div>
 	<div class="view_body">
-		<c:import url="/htmllist/${view}"></c:import>
+		<c:forEach items="${titleList}" var="title">
+			<c:import url="/jsplist/${title}.jsp"></c:import>
+		</c:forEach>
+
 	</div>
 </body>
 </html>

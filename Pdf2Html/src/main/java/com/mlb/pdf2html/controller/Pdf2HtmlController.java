@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mlb.pdf2html.dao.FileNameSetDao;
+import com.mlb.pdf2html.domain.FileNameSet;
 import com.mlb.pdf2html.service.Pdf2HtmlService;
 
 @Controller
@@ -30,15 +30,19 @@ public class Pdf2HtmlController {
 	public String convert(HttpSession session, Model model) {
 		System.out.println("===========convert===========");
 		@SuppressWarnings("unchecked")
-		ArrayList<FileNameSetDao> fileList = (ArrayList<FileNameSetDao>) session.getAttribute("fileList");
-		for(FileNameSetDao a: fileList){
+		ArrayList<FileNameSet> fileList = (ArrayList<FileNameSet>) session.getAttribute("fileList");
+		for (FileNameSet a : fileList) {
 			System.out.println(a);
 		}
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
+		String jspdir = session.getServletContext().getRealPath("jsplist/");
 
-		String testUrl = pdf2HtmlService.convertPdf2Html(path, filename);
-		System.out.println("URL:" + testUrl);
-		model.addAttribute("view", testUrl);
+		ArrayList<String> titleList = new ArrayList<>();
+		titleList= pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
+		for(String title:titleList){
+			System.out.println("title : "+title);
+		}
+		model.addAttribute("titleList", titleList);
 		return "minimap";
 	}
 
@@ -65,7 +69,7 @@ public class Pdf2HtmlController {
 	@RequestMapping(value = "/fileupload", method = RequestMethod.POST)
 	public String fileUploadAjax(HttpSession session, @RequestParam(value = "file") MultipartFile[] file) {
 		System.out.println("========fileupload============");
-		ArrayList<FileNameSetDao> fileList = new ArrayList<>();
+		ArrayList<FileNameSet> fileList = new ArrayList<>();
 		System.out.println(file.length);
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
 		System.out.println(pdfdir);

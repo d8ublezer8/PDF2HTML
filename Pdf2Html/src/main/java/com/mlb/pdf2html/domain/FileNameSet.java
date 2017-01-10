@@ -1,6 +1,6 @@
-package com.mlb.pdf2html.dao;
+package com.mlb.pdf2html.domain;
 
-public class FileNameSetDao {
+public class FileNameSet {
 	private String rfilename;
 	private String sfilename;
 
