@@ -1,7 +1,6 @@
 package com.mlb.pdf2html.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,13 +41,7 @@ public class Pdf2HtmlController {
 			System.out.println("title : "+title);
 		}
 		model.addAttribute("titleList", titleList);
-		return "minimap";
-	}
-
-	@RequestMapping(value = "htmllist/{filename}", method = RequestMethod.GET)
-	public String htmlList(Model model, @PathVariable String filename) {
-		System.out.println(filename);
-		return "htmllist/" + filename;
+		return "viewer";
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -58,16 +50,14 @@ public class Pdf2HtmlController {
 
 		return "home";
 	}
-
-	@RequestMapping(value = "/viewer", method = RequestMethod.GET)
-	public String viewer(HttpSession session, Model model) {
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	public String minimap(HttpSession session, Model model) {
 		logger.info(System.currentTimeMillis() + "");
 
 		return "viewer";
 	}
-
 	@RequestMapping(value = "/fileupload", method = RequestMethod.POST)
-	public String fileUploadAjax(HttpSession session, @RequestParam(value = "file") MultipartFile[] file) {
+	public void fileUploadAjax(HttpSession session, @RequestParam(value = "file") MultipartFile[] file) {
 		System.out.println("========fileupload============");
 		ArrayList<FileNameSet> fileList = new ArrayList<>();
 		System.out.println(file.length);
@@ -76,19 +66,5 @@ public class Pdf2HtmlController {
 		fileList = pdf2HtmlService.pdfUpload(file, pdfdir);
 		session.setAttribute("fileList", fileList);
 		System.out.println("========fileupload============");
-		return "redirect:convert";
-	}
-
-	@RequestMapping(value = "/minimap", method = RequestMethod.GET)
-	public String minimap(HttpSession session, Model model) {
-		logger.info(System.currentTimeMillis() + "");
-
-		return "minimap";
-	}
-
-	@RequestMapping(value = "/loading", method = RequestMethod.GET)
-	public String loading(HttpSession session, Model model) {
-		logger.info(System.currentTimeMillis() + "");
-		return "loading";
 	}
 }
