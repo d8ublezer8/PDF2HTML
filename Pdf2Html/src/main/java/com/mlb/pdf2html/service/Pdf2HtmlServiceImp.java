@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -14,34 +15,24 @@ import org.fit.pdfdom.PDFDomTreeConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mlb.pdf2html.domain.FileNameSet;
+import com.mlb.pdf2html.util.PDFDomTreeExt;
 
 @Service
 public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 
 	@Override
-	public ArrayList<String> convertPdf2Html(String pdfPath, String jspPath, ArrayList<FileNameSet> fileNameSetDaos) {
-		System.out.println("=======Service========");
+	public void convertPdf2Html(String pdfPath, String jspPath, HashMap<String, String> files) {
+		System.out.println("=======Service : Convert========");
 
-		ArrayList<String> outFileList = new ArrayList<>();
-		for (FileNameSet filename : fileNameSetDaos) {
-			if (filename.getSfilename().toLowerCase().endsWith(".pdf")) {
-
-				filename.setSfilename(filename.getSfilename().substring(0, filename.getSfilename().length() - 4));
-				outFileList.add(filename.getSfilename());
-
-			}
-		}
-		for (String file : outFileList) {
+		for (Entry<String, String> file : files.entrySet()) {
 			PDDocument document = null;
 			Writer output = null;
 			try {
-				System.out.println(pdfPath + file + ".pdf");
-				document = PDDocument.load(new File(pdfPath + "/" + file + ".pdf"));
-				System.out.println("file name : "+ file);
+				document = PDDocument.load(new File(pdfPath + "/" + file.getKey()));
 				PDFDomTreeConfig config = PDFDomTreeConfig.createDefaultConfig();
-				PDFDomTree parser = new PDFDomTree(config);
-				output = new PrintWriter(jspPath + file + ".jsp", "UTF-8");
+				 PDFDomTreeExt parser = new PDFDomTreeExt(config);
+				//PDFDomTree parser = new PDFDomTree(config);
+				output = new PrintWriter(jspPath + file.getKey(), "UTF-8");
 				parser.writeText(document, output);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -64,16 +55,16 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 				}
 			}
 		}
-
-		return outFileList;
+		System.out.println("=====Service : Convert End======");
 	}
 
 	@Override
-	public ArrayList<FileNameSet> pdfUpload(MultipartFile[] multipartFiles, String pdfDir) {
+	public HashMap<String, String> pdfUpload(MultipartFile[] multipartFiles, String pdfDir) {
+		System.out.println("=====Service : fileUpload End======");
 		int size = 0;
 		File[] sysfiles = null;
 
-		ArrayList<FileNameSet> filenames = new ArrayList<>();
+		HashMap<String, String> files = new HashMap<>();
 		if (multipartFiles != null) {
 			size = multipartFiles.length;
 			sysfiles = new File[size];
@@ -82,13 +73,9 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 			String sfilename = null;
 			for (int i = 0; i < size; i++) {
 				rfilename = multipartFiles[i].getOriginalFilename();
-				sfilename = "pdf" + System.currentTimeMillis() + "_" + i + ".pdf";
-				FileNameSet fileNameSetDao = new FileNameSet();
-				fileNameSetDao.setRfilename(rfilename);
-				fileNameSetDao.setSfilename(sfilename);
-				filenames.add(fileNameSetDao);
+				sfilename = "pdf" + System.currentTimeMillis() + "_" + i + ".jsp";
+				files.put(sfilename, rfilename);
 
-				System.out.println(pdfDir + "/" + sfilename);
 				sysfiles[i] = new File(pdfDir + "/" + sfilename);
 				try {
 					multipartFiles[i].transferTo(sysfiles[i]);
@@ -97,7 +84,8 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 				}
 			}
 		}
-		return filenames;
+		System.out.println("=====Service : fileUpload End======");
+		return files;
 	}
 
 }

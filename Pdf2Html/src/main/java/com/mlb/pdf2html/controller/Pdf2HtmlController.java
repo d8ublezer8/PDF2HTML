@@ -1,6 +1,6 @@
 package com.mlb.pdf2html.controller;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mlb.pdf2html.domain.FileNameSet;
 import com.mlb.pdf2html.service.Pdf2HtmlService;
 
 @Controller
@@ -28,20 +27,20 @@ public class Pdf2HtmlController {
 	public String convert(HttpSession session, Model model) {
 		System.out.println("===========convert===========");
 		@SuppressWarnings("unchecked")
-		ArrayList<FileNameSet> fileList = (ArrayList<FileNameSet>) session.getAttribute("fileList");
-		for (FileNameSet a : fileList) {
+		HashMap<String, String> fileList = (HashMap<String, String>) session.getAttribute("fileList");
+		for(String a : fileList.keySet()){
 			System.out.println(a);
 		}
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
 		String jspdir = session.getServletContext().getRealPath("jsplist/");
 
-		ArrayList<String> titleList = new ArrayList<>();
-		titleList= pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
-		for(String title:titleList){
-			System.out.println("title : "+title);
-		}
-		model.addAttribute("titleList", titleList);
-		return "viewer";
+		long startTime = System.currentTimeMillis();
+		pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
+		long endTime = System.currentTimeMillis();
+
+		System.out.println("convert time : " + (endTime - startTime));
+		System.out.println("========convert end===========");
+		return "redirect:view";
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -50,17 +49,18 @@ public class Pdf2HtmlController {
 
 		return "home";
 	}
+
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public String minimap(HttpSession session, Model model) {
 		logger.info(System.currentTimeMillis() + "");
 
 		return "viewer";
 	}
+
 	@RequestMapping(value = "/fileupload", method = RequestMethod.POST)
 	public void fileUploadAjax(HttpSession session, @RequestParam(value = "file") MultipartFile[] file) {
 		System.out.println("========fileupload============");
-		ArrayList<FileNameSet> fileList = new ArrayList<>();
-		System.out.println(file.length);
+		HashMap<String, String> fileList = new HashMap<>();
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
 		System.out.println(pdfdir);
 		fileList = pdf2HtmlService.pdfUpload(file, pdfdir);

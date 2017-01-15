@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>minimap</title>
+<title>viewer</title>
 <link rel="stylesheet" href="resources/minimap/minimap.min.css" />
 <link rel="stylesheet"
 	href="resources/bootstrap-3.3.2-dist/css/bootstrap.min.css">
@@ -13,22 +13,49 @@
 <script src="resources/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
 <script src="resources/minimap/minimap.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('body').minimap({
-			heightRatio : 0.3,
-			widthRatio : 0.25,
-			offsetHeightRatio : 0.0,
+	$(function() {
+
+		/* $('.view_body').minimap({
+			heightRatio : 1.0,
+			widthRatio : 0.15,
+			offsetHeightRatio : 0.3,
 			offsetWidthRatio : 0.0,
-			position : "right",
+			position : "left",
 			touch : true,
 			smoothScroll : true,
 			smoothScrollDelay : 200,
 			onPreviewChange : function() {
 			}
+		}); */
+		
+		var page = $('body>div:nth-child(3)>.page')
+		$('#totalPages').html('/' + page.length);
+		for (var i = 0; i < page.length; i++) {
+			page[i].id = 'page_' + (i + 1);
+		}
+		$('#pageMove').click(function() {
+			if (parseInt($('#pageNum').val()) <= 1) {
+				location.href = '#page_1';
+				$('#pageNum').val(1);
+			} else if (parseInt($('#pageNum').val()) >= page.length) {
+				location.href = '#page_' + page.length;
+				$('#pageNum').val(page.length);
+			} else {
+				location.href = '#page_' + (parseInt($('#pageNum').val()));
+
+			}
 		});
 	})
 </script>
 <style type="text/css">
+body, html {
+	margin: 0 auto;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	min-width: 1024px;
+}
+
 #title1 {
 	margin-top: 200px;
 }
@@ -39,51 +66,39 @@
 	font-weight: bold;
 }
 
-.mainButton {
-	background-color: lightblue;
-	color: white;
-	border: none;
-	width: 500px;
-	height: 70px;
-	display: block;
-	text-align: center;
-	font-size: 40px;
-	font-family: ∏º¿∫ ∞ÌµÒ;
-	font-weight: bold;
-	margin: 10px;
-	border: 0;
-	outline: 0;
+.view_body {
+	width: 70%;
+	margin: 0 auto;
+	margin-top: 20px;
 }
 
-.mainButton:hover {
-	background-color: white;
-	color: lightblue;
-	border: none;
-	width: 500px;
-	height: 70px;
-	display: block;
-	text-align: center;
-	font-size: 40px;
-	font-family: ∏º¿∫ ∞ÌµÒ;
-	font-weight: bold;
-	margin: 10px;
+.page {
+	margin: 0 auto !important;
 }
 
-.mainButton:active {
-	border: none;
+#pageNum {
+	width: 30px;
+}
+
+#pageNavi {
+	position: fixed;
+	left: 5%;
+	top: 150px;
 }
 </style>
 </head>
 <body>
 	<div style="text-align: center;">
-		<form method="POST" id="frm" action="">
-			<h1 id="title1" class="h1">PDF 2 HTML</h1>
-
-		</form>
+		<h1 id="title1" class="h1">PDF 2 HTML</h1>
+	</div>
+	<div id="pageNavi">
+		<input type="text" id="pageNum" value="1"><span
+			id="totalPages"></span>
+		<button id="pageMove">¿Ãµø</button>
 	</div>
 	<div class="view_body">
-		<c:forEach items="${titleList}" var="title">
-			<c:import url="/jsplist/${title}.jsp"></c:import>
+		<c:forEach items="${fileList}" var="file">
+			<c:import url="/jsplist/${file.key}"></c:import>
 		</c:forEach>
 	</div>
 </body>

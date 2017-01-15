@@ -1,14 +1,12 @@
 package com.mlb.pdf2html.service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mlb.pdf2html.domain.FileNameSet;
-
 public interface Pdf2HtmlService {
 
-	public ArrayList<String> convertPdf2Html(String pdfPath, String jspPath,ArrayList<FileNameSet> fileNameSetDaos);
+	public void convertPdf2Html(String pdfPath, String jspPath,HashMap<String, String> files);
 
-	public ArrayList<FileNameSet> pdfUpload(MultipartFile[] multipartFiles, String pdfDir);
+	public HashMap<String, String> pdfUpload(MultipartFile[] multipartFiles, String pdfDir);
 }
