@@ -83,3 +83,24 @@ body, html {
 .mainButton:active {
 	border: none;
 }
+
+.footer {
+	width: 50%;
+	height: 15%;;
+	margin: 0 auto;
+	margin-top: 300px;	
+}
+
+.logo {
+	width: 96px;
+	float: left;
+}
+
+.address {
+	width: 450px;
+	float: left;
+}
+
+.logoR {
+	float: left;
+}

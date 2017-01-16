@@ -12,6 +12,7 @@
 	href="resources/bootstrap-3.3.2-dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="resources/css/home.css" />
 <script type="text/javascript" src="resources/jquery-3.1.1.min.js"></script>
+
 <script type="text/javascript"
 	src="resources/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
@@ -39,6 +40,26 @@
 				value="Upload" style="cursor: pointer" onclick="fileSend(this.form)">
 		</div>
 	</form>
+	<div class="footer">
+		<p class="logo">
+			<img src="resources/image/footer_logo.gif" alt="footer">
+		</p>
+		<p class="address">
+			(06252) 서울시 강남구 강남대로 330 5층 (역삼동, 우덕빌딩) <br> <span>Tel.
+				(02) 2051-4151 / Fax. (02) 3454-1100 / <a
+				href="mailto: mobileleader@mobileleader.com">Email.
+					mobileleader@mobileleader.com </a><br> Copyright ⓒ 2012
+				Mobileleader. All rights reserved
+			</span>
+		</p>
+		<p class="logoR">
+			<a href="http://www.inzisoft.com/" target="_blank"><img
+				src="resources/image/footer_logo_inzi.gif" alt="footer"></a><a
+				href="http://www.2gram.kr/" target="_blank"
+				style="margin-left: 30px"><img
+				src="resources/image/footer_logo_2gram.gif" alt="footer"></a>
+		</p>
+	</div>
 	<!-- modal -->
 	<div class="modal fade" id="myModal">
 		<div class="modal-dialog modal-sm">
