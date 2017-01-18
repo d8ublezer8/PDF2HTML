@@ -86,6 +86,26 @@ body, html {
 	left: 5%;
 	top: 150px;
 }
+
+.footer {
+	width: 50%;
+	height: 15%;;
+	margin: 0 auto;
+}
+
+.logo {
+	width: 96px;
+	float: left;
+}
+
+.address {
+	width: 450px;
+	float: left;
+}
+
+.logoR {
+	float: left;
+}
 </style>
 </head>
 <body>
@@ -101,6 +121,26 @@ body, html {
 		<c:forEach items="${fileList}" var="file">
 			<c:import url="/jsplist/${file.key}.html" charEncoding="UTF-8"></c:import>
 		</c:forEach>
+	</div>
+	<div class="footer">
+		<p class="logo">
+			<img src="resources/image/footer_logo.gif" alt="footer">
+		</p>
+		<p class="address">
+			(06252) ����� ������ ������� 330 5�� (���ﵿ, �����) <br> <span>Tel.
+				(02) 2051-4151 / Fax. (02) 3454-1100 / <a
+				href="mailto: mobileleader@mobileleader.com">Email.
+					mobileleader@mobileleader.com </a><br> Copyright �� 2012
+				Mobileleader. All rights reserved
+			</span>
+		</p>
+		<p class="logoR">
+			<a href="http://www.inzisoft.com/" target="_blank"><img
+				src="resources/image/footer_logo_inzi.gif" alt="footer"></a><a
+				href="http://www.2gram.kr/" target="_blank"
+				style="margin-left: 30px"><img
+				src="resources/image/footer_logo_2gram.gif" alt="footer"></a>
+		</p>
 	</div>
 </body>
 </html>
