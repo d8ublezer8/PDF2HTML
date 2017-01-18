@@ -28,9 +28,6 @@ public class Pdf2HtmlController {
 		System.out.println("===========convert===========");
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> fileList = (HashMap<String, String>) session.getAttribute("fileList");
-		for(String a : fileList.keySet()){
-			System.out.println(a);
-		}
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
 		String jspdir = session.getServletContext().getRealPath("jsplist/");
 

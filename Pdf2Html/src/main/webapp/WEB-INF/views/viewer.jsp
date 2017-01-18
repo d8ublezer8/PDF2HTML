@@ -1,9 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
+<meta content="text/html;charset=utf-8" http-equiv="content-type" />
 <title>viewer</title>
 <link rel="stylesheet" href="resources/minimap/minimap.min.css" />
 <link rel="stylesheet"
@@ -15,7 +16,7 @@
 <script type="text/javascript">
 	$(function() {
 
-		/* $('.view_body').minimap({
+		$('.view_body').minimap({
 			heightRatio : 1.0,
 			widthRatio : 0.15,
 			offsetHeightRatio : 0.3,
@@ -26,8 +27,8 @@
 			smoothScrollDelay : 200,
 			onPreviewChange : function() {
 			}
-		}); */
-		
+		});
+
 		var page = $('body>div:nth-child(3)>.page')
 		$('#totalPages').html('/' + page.length);
 		for (var i = 0; i < page.length; i++) {
@@ -61,7 +62,7 @@ body, html {
 }
 
 .h1 {
-	font-family: "¸¼Àº °íµñ";
+	font-family: "ë§‘ì€ ê³ ë”•";
 	font-size: 80px;
 	font-weight: bold;
 }
@@ -94,11 +95,11 @@ body, html {
 	<div id="pageNavi">
 		<input type="text" id="pageNum" value="1"><span
 			id="totalPages"></span>
-		<button id="pageMove">ÀÌµ¿</button>
+		<button id="pageMove">ì´ë™</button>
 	</div>
 	<div class="view_body">
 		<c:forEach items="${fileList}" var="file">
-			<c:import url="/jsplist/${file.key}"></c:import>
+			<c:import url="/jsplist/${file.key}.html" charEncoding="UTF-8"></c:import>
 		</c:forEach>
 	</div>
 </body>

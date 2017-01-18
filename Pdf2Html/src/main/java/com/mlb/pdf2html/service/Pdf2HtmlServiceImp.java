@@ -1,6 +1,7 @@
 package com.mlb.pdf2html.service;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -28,11 +29,12 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 			PDDocument document = null;
 			Writer output = null;
 			try {
-				document = PDDocument.load(new File(pdfPath + "/" + file.getKey()));
+				System.out.println(file.getValue());
+				document = PDDocument.load(new File(pdfPath + "/" + file.getKey() + ".pdf"));
 				PDFDomTreeConfig config = PDFDomTreeConfig.createDefaultConfig();
-				 PDFDomTreeExt parser = new PDFDomTreeExt(config);
-				//PDFDomTree parser = new PDFDomTree(config);
-				output = new PrintWriter(jspPath + file.getKey(), "UTF-8");
+				PDFDomTreeExt parser = new PDFDomTreeExt(config);
+				// PDFDomTree parser = new PDFDomTree(config);
+				output = new PrintWriter(jspPath + file.getKey() + ".html", "UTF-8");
 				parser.writeText(document, output);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -73,10 +75,11 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 			String sfilename = null;
 			for (int i = 0; i < size; i++) {
 				rfilename = multipartFiles[i].getOriginalFilename();
-				sfilename = "pdf" + System.currentTimeMillis() + "_" + i + ".jsp";
-				files.put(sfilename, rfilename);
+				sfilename = "pdf" + System.currentTimeMillis() + "_" + i;
 
-				sysfiles[i] = new File(pdfDir + "/" + sfilename);
+				sysfiles[i] = new File(pdfDir + "/" + sfilename + ".pdf");
+
+				files.put(sfilename, rfilename);
 				try {
 					multipartFiles[i].transferTo(sysfiles[i]);
 				} catch (IllegalStateException | IOException e) {

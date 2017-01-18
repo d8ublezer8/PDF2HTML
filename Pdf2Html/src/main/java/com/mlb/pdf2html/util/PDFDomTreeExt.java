@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 public class PDFDomTreeExt extends PDFDomTree {
 	private static Logger log = LoggerFactory.getLogger(PDFDomTreeExt.class);
@@ -52,6 +53,7 @@ public class PDFDomTreeExt extends PDFDomTree {
 		body = doc.createElement("body");
 
 		Element root = doc.getDocumentElement();
+		
 		root.appendChild(head);
 		root.appendChild(body);
 	}
@@ -90,36 +92,31 @@ public class PDFDomTreeExt extends PDFDomTree {
 		return el;
 	}
 
-	@Override
-	protected Element createTextElement(float width) {
-		Element el = null;
-		String style = curstyle.toString();
-		String topInfo[] = style.split(";");
-		// 이전줄에 데이터 추가
-		if (preTextTop != null && preTextTop.equals(topInfo[0])) {
-			el = preTextEl;
-		} else {
-			// 첫줄 생성
-			if (preTextTop != null && !preTextTop.equals(topInfo[0])) {
-				style += "width:" + lineWidth + UNIT + ";";
-				el = preTextEl;
-				el.setAttribute("style", style);
-				lineWidth = 0;
-			}
-			el = doc.createElement("div");
-			el.setAttribute("id", "p" + (textcnt++));
-			el.setAttribute("class", "p");
-			preTextEl = el;
-			preTextTop = topInfo[0];
-		}
-		lineWidth += width;
-		return el;
-	}
-
-	@Override
-	protected void renderText(String data, TextMetrics metrics) {
-		curpage.appendChild(createTextElement(data, metrics.getWidth()));
-	}
+//	@Override
+//	protected Element createTextElement(float width) {
+//		Element el = null;
+//		String style = curstyle.toString();
+//		String topInfo[] = style.split(";");
+//		// 이전줄에 데이터 추가
+//		if (preTextTop != null && preTextTop.equals(topInfo[0])) {
+//			el = preTextEl;
+//		} else {
+//			// 첫줄 생성
+//			if (preTextTop != null && !preTextTop.equals(topInfo[0])) {
+//				style += "width:" + lineWidth + UNIT + ";";
+//				el = preTextEl;
+//				el.setAttribute("style", style);
+//				lineWidth = 0;
+//			}
+//			el = doc.createElement("div");
+//			el.setAttribute("id", "p" + (textcnt++));
+//			el.setAttribute("class", "p");
+//			preTextEl = el;
+//			preTextTop = topInfo[0];
+//		}
+//		lineWidth += width;
+//		return el;
+//	}
 
 	@Override
 	protected void finishBox() {
@@ -138,11 +135,18 @@ public class PDFDomTreeExt extends PDFDomTree {
 			curstyle.setLeft(textMetrics.getX());
 			curstyle.setTop(textMetrics.getTop());
 			curstyle.setLineHeight(textMetrics.getHeight());
-
 			renderText(s, textMetrics);
 			textLine = new StringBuilder();
 			textMetrics = null;
 		}
+	}
+
+	@Override
+	protected Element createTextElement(String data, float width) {
+		Element el = createTextElement(width);
+		Text text = doc.createTextNode(data);
+		el.appendChild(text);
+		return el;
 	}
 
 }
