@@ -23,20 +23,21 @@ public class Pdf2HtmlController {
 	@Autowired
 	private Pdf2HtmlService pdf2HtmlService;
 
+	/**
+	 * @param
+	 */
 	@RequestMapping(value = "/convert", method = RequestMethod.GET)
 	public String convert(HttpSession session, Model model) {
-		System.out.println("===========convert===========");
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> fileList = (HashMap<String, String>) session.getAttribute("fileList");
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
-		String jspdir = session.getServletContext().getRealPath("jsplist/");
+		String jspdir = session.getServletContext().getRealPath("htmlList/");
 
 		long startTime = System.currentTimeMillis();
 		pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
 		long endTime = System.currentTimeMillis();
-
+		
 		System.out.println("convert time : " + (endTime - startTime));
-		System.out.println("========convert end===========");
 		return "redirect:view";
 	}
 
@@ -56,12 +57,9 @@ public class Pdf2HtmlController {
 
 	@RequestMapping(value = "/fileupload", method = RequestMethod.POST)
 	public void fileUploadAjax(HttpSession session, @RequestParam(value = "file") MultipartFile[] file) {
-		System.out.println("========fileupload============");
 		HashMap<String, String> fileList = new HashMap<>();
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
-		System.out.println(pdfdir);
 		fileList = pdf2HtmlService.pdfUpload(file, pdfdir);
 		session.setAttribute("fileList", fileList);
-		System.out.println("========fileupload============");
 	}
 }

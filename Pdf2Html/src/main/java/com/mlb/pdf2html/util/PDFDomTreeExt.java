@@ -1,14 +1,18 @@
 package com.mlb.pdf2html.util;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.pdfbox.contentstream.operator.Operator;
+import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.fit.pdfdom.PDFDomTree;
 import org.fit.pdfdom.PDFDomTreeConfig;
+import org.fit.pdfdom.PathSegment;
 import org.fit.pdfdom.TextMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +57,7 @@ public class PDFDomTreeExt extends PDFDomTree {
 		body = doc.createElement("body");
 
 		Element root = doc.getDocumentElement();
-		
+
 		root.appendChild(head);
 		root.appendChild(body);
 	}
@@ -92,31 +96,29 @@ public class PDFDomTreeExt extends PDFDomTree {
 		return el;
 	}
 
-//	@Override
-//	protected Element createTextElement(float width) {
-//		Element el = null;
-//		String style = curstyle.toString();
-//		String topInfo[] = style.split(";");
-//		// 이전줄에 데이터 추가
-//		if (preTextTop != null && preTextTop.equals(topInfo[0])) {
-//			el = preTextEl;
-//		} else {
-//			// 첫줄 생성
-//			if (preTextTop != null && !preTextTop.equals(topInfo[0])) {
-//				style += "width:" + lineWidth + UNIT + ";";
-//				el = preTextEl;
-//				el.setAttribute("style", style);
-//				lineWidth = 0;
-//			}
-//			el = doc.createElement("div");
-//			el.setAttribute("id", "p" + (textcnt++));
-//			el.setAttribute("class", "p");
-//			preTextEl = el;
-//			preTextTop = topInfo[0];
-//		}
-//		lineWidth += width;
-//		return el;
-//	}
+	@Override
+	protected Element createTextElement(float width) {
+		Element el = null;
+		String style = curstyle.toString();
+		String topInfo[] = style.split(";");
+		if (preTextTop != null && preTextTop.equals(topInfo[0])) {
+			el = preTextEl;
+		} else {
+			if (preTextTop != null && !preTextTop.equals(topInfo[0])) {
+				style += "width:" + lineWidth + UNIT + ";";
+				el = preTextEl;
+				el.setAttribute("style", style);
+				lineWidth = 0;
+			}
+			el = doc.createElement("div");
+			el.setAttribute("id", "p" + (textcnt++));
+			el.setAttribute("class", "p");
+			preTextEl = el;
+			preTextTop = topInfo[0];
+		}
+		lineWidth += width;
+		return el;
+	}
 
 	@Override
 	protected void finishBox() {
@@ -126,6 +128,7 @@ public class PDFDomTreeExt extends PDFDomTree {
 				s = textLine.reverse().toString();
 			else
 				s = textLine.toString();
+
 			if (s.contains("“")) {
 				s = s.replace("“", "\"");
 			}
@@ -142,11 +145,110 @@ public class PDFDomTreeExt extends PDFDomTree {
 	}
 
 	@Override
-	protected Element createTextElement(String data, float width) {
-		Element el = createTextElement(width);
-		Text text = doc.createTextNode(data);
-		el.appendChild(text);
-		return el;
+	protected void processOperator(Operator operator, List<COSBase> arguments) throws IOException {
+		String operation = operator.getName();
+		String cosStr = "";
+		for (COSBase cos : arguments) {
+			cosStr += cos.toString();
+		}
+		System.out.println("Operator: " + operation + ":" + arguments.size() + " => " + cosStr);
+		// word spacing
+		if (operation.equals("Tw")) {
+			style.setWordSpacing(getLength(arguments.get(0)));
+		}
+
+		// letter spacing
+		else if (operation.equals("Tc")) {
+			style.setLetterSpacing(getLength(arguments.get(0)));
+		}
+
+		// graphics
+		else if (operation.equals("m")) // move
+		{
+			if (!disableGraphics) {
+				if (arguments.size() == 2) {
+					float[] pos = transformPosition(getLength(arguments.get(0)), getLength(arguments.get(1)));
+					path_x = pos[0];
+					path_y = pos[1];
+					path_start_x = pos[0];
+					path_start_y = pos[1];
+				}
+			}
+		} else if (operation.equals("l")) // line
+		{
+			if (!disableGraphics) {
+				if (arguments.size() == 2) {
+					float[] pos = transformPosition(getLength(arguments.get(0)), getLength(arguments.get(1)));
+					graphicsPath.add(new PathSegment(path_x, path_y, pos[0], pos[1]));
+					path_x = pos[0];
+					path_y = pos[1];
+				}
+			}
+		} else if (operation.equals("h")) // end subpath
+		{
+			if (!disableGraphics) {
+				graphicsPath.add(new PathSegment(path_x, path_y, path_start_x, path_start_y));
+			}
+		}
+
+		// rectangle
+		else if (operation.equals("re")) {
+			if (!disableGraphics) {
+				if (arguments.size() == 4) {
+					float x = getLength(arguments.get(0));
+					float y = getLength(arguments.get(1));
+					float width = getLength(arguments.get(2));
+					float height = getLength(arguments.get(3));
+
+					float[] p1 = transformPosition(x, y);
+					float[] p2 = transformPosition(x + width, y + height);
+
+					graphicsPath.add(new PathSegment(p1[0], p1[1], p2[0], p1[1]));
+					graphicsPath.add(new PathSegment(p2[0], p1[1], p2[0], p2[1]));
+					graphicsPath.add(new PathSegment(p2[0], p2[1], p1[0], p2[1]));
+					graphicsPath.add(new PathSegment(p1[0], p2[1], p1[0], p1[1]));
+				}
+			}
+		}
+
+		// fill
+		else if (operation.equals("f") || operation.equals("F") || operation.equals("f*")) {
+			renderPath(graphicsPath, false, true);
+			graphicsPath.removeAllElements();
+		}
+
+		// stroke
+		else if (operation.equals("S")) {
+			renderPath(graphicsPath, true, false);
+			graphicsPath.removeAllElements();
+		} else if (operation.equals("s")) {
+			graphicsPath.add(new PathSegment(path_x, path_y, path_start_x, path_start_y));
+			renderPath(graphicsPath, true, false);
+			graphicsPath.removeAllElements();
+		}
+
+		// stroke and fill
+		else if (operation.equals("B") || operation.equals("B*")) {
+			renderPath(graphicsPath, true, true);
+			graphicsPath.removeAllElements();
+		} else if (operation.equals("b") || operation.equals("b*")) {
+			graphicsPath.add(new PathSegment(path_x, path_y, path_start_x, path_start_y));
+			renderPath(graphicsPath, true, true);
+			graphicsPath.removeAllElements();
+		}
+
+		// cancel path
+		else if (operation.equals("n")) {
+			graphicsPath.removeAllElements();
+		}
+
+		// invoke named object - images
+		else if (operation.equals("Do")) {
+			if (!disableImages)
+				processImageOperation(arguments);
+		}
+
+		super.processOperator(operator, arguments);
 	}
 
 }

@@ -119,7 +119,7 @@ body, html {
 	</div>
 	<div class="view_body">
 		<c:forEach items="${fileList}" var="file">
-			<c:import url="/jsplist/${file.key}.html" charEncoding="UTF-8"></c:import>
+			<c:import url="/htmlList/${file.key}.html" charEncoding="UTF-8"></c:import>
 		</c:forEach>
 	</div>
 	<div class="footer">
@@ -127,10 +127,10 @@ body, html {
 			<img src="resources/image/footer_logo.gif" alt="footer">
 		</p>
 		<p class="address">
-			(06252) ����� ������ ������� 330 5�� (���ﵿ, �����) <br> <span>Tel.
+			(06252) 서울시 강남구 강남대로 330 5층 (역삼동, 우덕빌딩) <br> <span>Tel.
 				(02) 2051-4151 / Fax. (02) 3454-1100 / <a
 				href="mailto: mobileleader@mobileleader.com">Email.
-					mobileleader@mobileleader.com </a><br> Copyright �� 2012
+					mobileleader@mobileleader.com </a><br> Copyright ⓒ 2012
 				Mobileleader. All rights reserved
 			</span>
 		</p>

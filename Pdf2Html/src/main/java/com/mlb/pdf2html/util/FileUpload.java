@@ -10,17 +10,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUpload {
-	public static void fileUpload(MultipartFile fileData, String path,
-			String fileName) throws IOException {
-		// String originalFileName = fileData.getOriginalFilename();
-		// String contentType = fileData.getContentType();
+	public static void fileUpload(MultipartFile fileData, String path, String fileName) throws IOException {
 		long fileSize = fileData.getSize();
-		/*
-		 * System.out.println("file Info"); System.out.println("fileName " +
-		 * fileName); System.out.println("originalFileName :" +
-		 * originalFileName); System.out.println("contentType :" + contentType);
-		 * System.out.println("fileSize :" + fileSize);
-		 */
 		InputStream is = null;
 		OutputStream out = null;
 		try {
@@ -28,15 +19,12 @@ public class FileUpload {
 				is = fileData.getInputStream();
 				File realUploadDir = new File(path);
 
-				if (!realUploadDir.exists()) { // ��ο� ������ �������� ������
-												// �����մϴ�.
-					System.out.println("���� ���� ����");
+				if (!realUploadDir.exists()) {
 					realUploadDir.mkdirs();
 				}
 
 				out = new FileOutputStream(path + "/" + fileName);
-				FileCopyUtils.copy(is, out); // InputStream���� �� ������
-				// outputStream���� ����
+				FileCopyUtils.copy(is, out);
 			} else {
 				new IOException("�߸��� ������ ���ε� �ϼ̽��ϴ�.");
 			}

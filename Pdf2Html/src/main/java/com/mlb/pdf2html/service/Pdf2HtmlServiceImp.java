@@ -1,7 +1,6 @@
 package com.mlb.pdf2html.service;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -23,13 +22,10 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 
 	@Override
 	public void convertPdf2Html(String pdfPath, String jspPath, HashMap<String, String> files) {
-		System.out.println("=======Service : Convert========");
-
 		for (Entry<String, String> file : files.entrySet()) {
 			PDDocument document = null;
 			Writer output = null;
 			try {
-				System.out.println(file.getValue());
 				document = PDDocument.load(new File(pdfPath + "/" + file.getKey() + ".pdf"));
 				PDFDomTreeConfig config = PDFDomTreeConfig.createDefaultConfig();
 				PDFDomTreeExt parser = new PDFDomTreeExt(config);
@@ -57,12 +53,10 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 				}
 			}
 		}
-		System.out.println("=====Service : Convert End======");
 	}
 
 	@Override
 	public HashMap<String, String> pdfUpload(MultipartFile[] multipartFiles, String pdfDir) {
-		System.out.println("=====Service : fileUpload End======");
 		int size = 0;
 		File[] sysfiles = null;
 
@@ -87,7 +81,6 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 				}
 			}
 		}
-		System.out.println("=====Service : fileUpload End======");
 		return files;
 	}
 
