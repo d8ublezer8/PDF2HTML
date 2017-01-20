@@ -4,52 +4,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta content="text/html;charset=utf-8" http-equiv="content-type" />
-<title>viewer</title>
-<link rel="stylesheet" href="resources/minimap/minimap.min.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"
 	href="resources/bootstrap-3.3.2-dist/css/bootstrap.min.css">
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="resources/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
-<script src="resources/minimap/minimap.min.js"></script>
-<script type="text/javascript">
-	$(function() {
-
-		$('.view_body').minimap({
-			heightRatio : 1.0,
-			widthRatio : 0.15,
-			offsetHeightRatio : 0.3,
-			offsetWidthRatio : 0.0,
-			position : "left",
-			touch : true,
-			smoothScroll : false,
-			onPreviewChange : function() {
-			}
-		});
-
-		var page = $('body>div:nth-child(3)>.page')
-		$('#totalPages').html('/' + page.length);
-		for (var i = 0; i < page.length; i++) {
-			page[i].id = 'page_' + (i + 1);
-		}
-		$('#pageMove').click(function() {
-			if (parseInt($('#pageNum').val()) <= 1) {
-				location.href = '#page_1';
-				$('#pageNum').val(1);
-			} else if (parseInt($('#pageNum').val()) >= page.length) {
-				location.href = '#page_' + page.length;
-				$('#pageNum').val(page.length);
-			} else {
-				location.href = '#page_' + (parseInt($('#pageNum').val()));
-
-			}
-		});
-		$('#imgBtn').click(function(){
-			location.href = '/img';
-		});
-	})
-</script>
+<title>pdf2img</title>
 <style type="text/css">
 body, html {
 	margin: 0 auto;
@@ -63,30 +24,16 @@ body, html {
 	margin-top: 200px;
 }
 
-.h1 {
-	font-family: "맑은 고딕";
-	font-size: 80px;
-	font-weight: bold;
-}
-
 .view_body {
 	width: 70%;
 	margin: 0 auto;
 	margin-top: 20px;
 }
 
-.page {
-	margin: 0 auto !important;
-}
-
-#pageNum {
-	width: 30px;
-}
-
-#pageNavi {
-	position: fixed;
-	left: 5%;
-	top: 150px;
+.h1 {
+	font-family: "맑은 고딕";
+	font-size: 80px;
+	font-weight: bold;
 }
 
 .footer {
@@ -108,19 +55,22 @@ body, html {
 .logoR {
 	float: left;
 }
+
+.imgs {
+	margin: 0 auto;
+}
 </style>
 </head>
 <body>
-	
-	<div id="pageNavi">
-		<input type="text" id="pageNum" value="1"><span
-			id="totalPages"></span>
-		<button id="pageMove">이동</button>
-		<button id="imgBtn">이미지</button>
+	<div style="text-align: center;">
+		<h1 id="title1" class="h1">PDF 2 HTML</h1>
 	</div>
 	<div class="view_body">
 		<c:forEach items="${fileList}" var="file">
-			<c:import url="/htmlList/${file.key}.html" charEncoding="UTF-8"></c:import>
+			<c:forEach begin="0" end="${pageInfo.get(file.key)-1}" varStatus="status">
+				<img src="/htmlList/${file.key}-${status.index+1}.png" width="100%"
+					class="imgs" />
+			</c:forEach>
 		</c:forEach>
 	</div>
 	<div class="footer">

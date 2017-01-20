@@ -1,5 +1,6 @@
 package com.mlb.pdf2html.service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,6 +11,9 @@ import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.fit.pdfdom.PDFDomTree;
 import org.fit.pdfdom.PDFDomTreeConfig;
 import org.springframework.stereotype.Service;
@@ -21,12 +25,23 @@ import com.mlb.pdf2html.util.PDFDomTreeExt;
 public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 
 	@Override
-	public void convertPdf2Html(String pdfPath, String jspPath, HashMap<String, String> files) {
+	public HashMap<String, Integer> convertPdf2Html(String pdfPath, String jspPath, HashMap<String, String> files) {
+		HashMap<String, Integer> pageInfo = new HashMap<>();
 		for (Entry<String, String> file : files.entrySet()) {
 			PDDocument document = null;
 			Writer output = null;
 			try {
 				document = PDDocument.load(new File(pdfPath + "/" + file.getKey() + ".pdf"));
+				int totalPage = document.getNumberOfPages();
+				pageInfo.put(file.getKey(), totalPage);
+				PDFRenderer pdfRenderer = new PDFRenderer(document);
+				for (int page = 0; page < totalPage; ++page) {
+					BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB);
+
+					// suffix in filename will be used as the file format
+					ImageIOUtil.writeImage(bim, jspPath + "/" + file.getKey() + "-" + (page + 1) + ".png",
+							300);
+				}
 				PDFDomTreeConfig config = PDFDomTreeConfig.createDefaultConfig();
 				PDFDomTreeExt parser = new PDFDomTreeExt(config);
 				// PDFDomTree parser = new PDFDomTree(config);
@@ -53,6 +68,7 @@ public class Pdf2HtmlServiceImp implements Pdf2HtmlService {
 				}
 			}
 		}
+		return pageInfo;
 	}
 
 	@Override

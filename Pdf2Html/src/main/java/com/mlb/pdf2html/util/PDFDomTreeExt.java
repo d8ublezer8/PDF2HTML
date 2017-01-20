@@ -24,6 +24,7 @@ public class PDFDomTreeExt extends PDFDomTree {
 	private static Logger log = LoggerFactory.getLogger(PDFDomTreeExt.class);
 
 	private String preTextTop = null;
+	private String preTextLeft = null;
 	private Element preTextEl = null;
 	private float lineWidth = 0;
 
@@ -105,6 +106,17 @@ public class PDFDomTreeExt extends PDFDomTree {
 			el = preTextEl;
 		} else {
 			if (preTextTop != null && !preTextTop.equals(topInfo[0])) {
+				String styleInfo[] = style.split(";");
+				style="";
+				for(int i=0;i<styleInfo.length;i++){
+					if(i==0){
+						style+=preTextTop+";";
+					}else if(i==1){
+						style+=preTextLeft+";";
+					}else{
+						style+=styleInfo[i];
+					}
+				}
 				style += "width:" + lineWidth + UNIT + ";";
 				el = preTextEl;
 				el.setAttribute("style", style);
@@ -115,6 +127,7 @@ public class PDFDomTreeExt extends PDFDomTree {
 			el.setAttribute("class", "p");
 			preTextEl = el;
 			preTextTop = topInfo[0];
+			preTextLeft = topInfo[1];
 		}
 		lineWidth += width;
 		return el;
@@ -144,14 +157,18 @@ public class PDFDomTreeExt extends PDFDomTree {
 		}
 	}
 
-	@Override
+	/*@Override
 	protected void processOperator(Operator operator, List<COSBase> arguments) throws IOException {
 		String operation = operator.getName();
 		String cosStr = "";
-		for (COSBase cos : arguments) {
-			cosStr += cos.toString();
+		if (arguments != null) {
+			for (COSBase cos : arguments) {
+				cosStr += cos.toString();
+			}
+			System.out.println("Operator: " + operation + ":" + arguments.size() + " => " + cosStr);
+		}else{
+			System.out.println("Operator: " + operation);
 		}
-		System.out.println("Operator: " + operation + ":" + arguments.size() + " => " + cosStr);
 		// word spacing
 		if (operation.equals("Tw")) {
 			style.setWordSpacing(getLength(arguments.get(0)));
@@ -250,5 +267,5 @@ public class PDFDomTreeExt extends PDFDomTree {
 
 		super.processOperator(operator, arguments);
 	}
-
+*/
 }

@@ -27,17 +27,19 @@ public class Pdf2HtmlController {
 	 * @param
 	 */
 	@RequestMapping(value = "/convert", method = RequestMethod.GET)
-	public String convert(HttpSession session, Model model) {
+	public String convert(HttpSession session) {
 		@SuppressWarnings("unchecked")
 		HashMap<String, String> fileList = (HashMap<String, String>) session.getAttribute("fileList");
+		HashMap<String, Integer> pageInfo = new HashMap<>();
 		String pdfdir = session.getServletContext().getRealPath("pdflist/");
 		String jspdir = session.getServletContext().getRealPath("htmlList/");
 
 		long startTime = System.currentTimeMillis();
-		pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
+		pageInfo = pdf2HtmlService.convertPdf2Html(pdfdir, jspdir, fileList);
 		long endTime = System.currentTimeMillis();
-		
 		System.out.println("convert time : " + (endTime - startTime));
+		
+		session.setAttribute("pageInfo", pageInfo);
 		return "redirect:view";
 	}
 
@@ -53,6 +55,13 @@ public class Pdf2HtmlController {
 		logger.info(System.currentTimeMillis() + "");
 
 		return "viewer";
+	}
+
+	@RequestMapping(value = "/img", method = RequestMethod.GET)
+	public String pdf2Img(HttpSession session, Model model) {
+		logger.info(System.currentTimeMillis() + "");
+
+		return "pdf2img";
 	}
 
 	@RequestMapping(value = "/fileupload", method = RequestMethod.POST)
